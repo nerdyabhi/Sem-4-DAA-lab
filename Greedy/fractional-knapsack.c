@@ -1,89 +1,59 @@
-#include<stdio.h>
-struct arr{
-    int weight;
+#include <stdio.h>
+
+struct obj
+{
     int profit;
+    int weight;
     float ratio;
 };
-int main(int argc, char const *argv[])
+
+int main()
 {
-    printf("\nEnter the capacity of the arr : ");
-    int cap;  // weight of the arr
-    scanf("%d",&cap); 
-    printf("\nEnter the no. of the objects to be put in the arr : ");
-    int n ;
-    scanf("%d", &n);
-    struct arr object[n];
+    int n = 7, capacity = 15;
+    int profit[7] = {10, 5, 15, 7, 6, 18, 3};
+    int weight[7] = {2, 3, 5, 7, 1, 4, 1};
 
-    // enter the data of each obj of arr
-    for(int i = 0; i< n; i++){
-        printf("\nEnter the weight and profit of %d bag : \t", i+1);
-        scanf("%d %d", &object[i].weight,&object[i].profit);
-        object[i].ratio = (float)object[i].profit/(float)object[i].weight;
+    struct obj arr[7];
+
+    for (int i = 0; i < n; i++)
+    {
+        arr[i].profit = profit[i];
+        arr[i].weight = weight[i];
+        float ratio = (float)profit[i] / (float)weight[i];
+        arr[i].ratio = ratio;
     }
 
-    // printinng the arr datas:
-    printf("\nSo the arr is : \n");
-    printf("\nProfit:\t");
-    for(int i = 0 ; i< n;i++){
-        printf(" %d \t", object[i].profit);
-    }
-    printf("\nWeight:\t");
-    for(int i = 0 ; i< n;i++){
-        printf(" %d \t", object[i].weight);
-    }
-
-    // sorting the object on the basis of the profit:  (using B. Sort but actually we have to use Merge Sort)
-    // sorting in descending order of ratios
-    for(int i = 0; i<n-1;i++){
-        for(int j = 0; j<n-i-1;j++){
-            if(object[j].ratio < object[j+1].ratio ){
-
-                // swap the objects . no need to swap its attributes alg alg
-                struct arr temp = object[j];
-                object[j] = object[j+1];
-                object[j+1] = temp;
-            
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (arr[j].ratio <= arr[j + 1].ratio)
+            {
+                struct obj temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp; // sorted on the basis of bla bla
             }
         }
     }
 
-    // printinng the arr datas:  after sorting
-    printf("\n\nSo the sorted arr is : \n");
-    printf("\nBags:  \t");
-    printf("\nProfit:\t");
-    for(int i = 0 ; i< n;i++){
-        printf(" %d \t", object[i].profit);
-    }
-    printf("\nWeight:\ t");
-    for(int i = 0 ; i< n;i++){
-        printf(" %d \t", object[i].weight);
-    }
-
-    // greedy algo :
-
-    float prof=0;
-    float rProf=0.0;
-    int remW = cap;
-    int i = 0;
-    for(i = 0 ; i<n;i++){
-        if(object[i].weight>remW) break;
-
-        prof+=object[i].profit;
-        remW-= object[i].weight;
-        
-       
-    }
-     printf("\n%.2f", prof);
-     printf("\n%d", remW);
-    if(i<n){
-
-            // rProf = object[i].ratio*object[i].profit;  // wrong h .hmlog ko remainning weight k ratio lena hga
-            rProf= object[i].profit * (float)remW/object[i].weight;
-            prof+= rProf;  
-
+    float sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (capacity == 0)
+            break;
+        if (capacity >= arr[i].weight)
+        {
+            sum += arr[i].profit;
+            capacity -= arr[i].weight;
         }
 
-    printf("\n\n the profit is %.2f", prof);
+        else if (capacity > 0)
+        {
+            float rem = (float)((float)capacity / (float)arr[i].weight * (float)arr[i].profit);
+            sum += rem;
+            capacity = 0;
+        }
+    }
 
-    return 0;
+    printf("Total profit is : %.2f", sum);
 }
